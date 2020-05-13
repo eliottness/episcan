@@ -1,11 +1,10 @@
 import uuid
-import json
 from memory_profiler import profile
 from mangas.manga import * #bad
 
 def chapter_init(num):
     self = Chapter(num, Lang.VF)
-    self.pages = [uuid.uuid4().hex for i in range(20)]
+    self.pages = [uuid.uuid4().hex[:LEN_IMG_ID] for i in range(20)]
 
     return self
 
@@ -23,7 +22,7 @@ def manga_init():
 
     return self
 
-#@profile
+@profile
 def main():
     m = manga_init()
     m.save_manga()

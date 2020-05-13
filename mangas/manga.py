@@ -3,6 +3,7 @@ import os
 import json
 from uuid import uuid4
 
+LEN_IMG_ID = 16
 IMG_EXT    = ".png"
 IMAGES_DIR = os.path.join("images", '') #makes either 'images/' or 'images\'
 MANGAS_DIR = os.path.join("mangas", '')
@@ -87,10 +88,10 @@ class Chapter:
 
         assert name[-4:] == IMG_EXT, f"The image must be a {IMG_EXT} file"
 
-        id   = uuid4().hex
+        id   = uuid4().hex[:LEN_IMG_ID]
         file = img_file(id)
         while not os.path.isfile(file):
-            id   = uuid4().hex
+            id   = uuid4().hex[:LEN_IMG_ID]
             file = img_file(id)
 
         os.rename(name, file)
@@ -195,8 +196,8 @@ class Manga:
         assert isinstance(chapter.lang, Lang), "Chapter lang must from the Lang class"
 
         for page in chapter.pages:
-            assert type(page) is str and len(page) == 32, \
-            "The pages list must be a list of hexadecimal 4-bytes digest in strings"
+            assert type(page) is str and len(page) == LEN_IMG_ID, \
+            f"The pages list must be a list of hexadecimal digest in strings of len {LEN_IMG_ID}"
             assert os.path.isfile(img_file(page)), \
             f"Did not find any page named {page} in images dir"
 
