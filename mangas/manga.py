@@ -5,6 +5,7 @@ from uuid import uuid4
 
 IMG_EXT    = ".png"
 IMAGES_DIR = os.path.join("images", '') #makes either 'images/' or 'images\'
+MANGAS_DIR = os.path.join("mangas", '')
 
 def img_file(page_name):
     return IMAGES_DIR + page_name + IMG_EXT
@@ -59,6 +60,11 @@ class Chapter:
         return [self.num, self.lang, self.pages]
 
     def __init__(self, num, lang):
+        """
+        Constructor of the Chapter class:
+        :param num  -> float: chapter number
+        :param lang -> int | Lang: language of the chapter
+        """
         self.num   = num
         self.pages = list()
         self.lang  = Lang.get_lang(lang)
@@ -114,12 +120,12 @@ class Manga:
 
     @staticmethod
     def load_manga(filename):
-        with open(filename, 'r') as fh:
+        with open(MANGAS_DIR + filename, 'r') as fh:
             return Manga.from_dict(filename, json.load(fh))
 
     @classmethod
     def from_dict(cls, filename, value):
-        m = Manga(filename, value[0], value[1], Scraper.from_dict(value[2]))
+        m = cls(filename, value[0], value[1], Scraper.from_dict(value[2]))
 
         for k, v in value[3].items():
             m.chapters[float(k)] = Chapter.from_dict(v)
@@ -135,8 +141,9 @@ class Manga:
 
         return m
 
-    def save_manga(self):
-        with open(self.filename, 'w') as fh:
+    def save_manga(self, filename=None):
+        filename = filename if filename else self.filename
+        with open(MANGAS_DIR + filename, 'w') as fh:
             json.dump(self.to_dict(), fh)
 
     def to_dict(self):
@@ -145,7 +152,7 @@ class Manga:
         for k, v in self.chapters.items():
             chapters[k] = v.to_dict()
 
-        return [self.name, self.lang, self.scraper_data, chapters]
+        return [self.name, self.lang, self.scraper_data.to_dict(), chapters]
 
     def __init__(self, filename, name, lang, scraper_data):
 
@@ -168,6 +175,7 @@ class Manga:
 
     @property
     def chap_num_list(self):
+        """Sorted list of chapter numbers"""
         return list(sorted(self.chapters.keys()))
 
     def add_chapter(self, chapter, overwrite=False):
