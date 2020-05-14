@@ -45,11 +45,17 @@ class DOMElem:
 
 class Scraper:
     """
+    Would work for Japscan, scantrad-union, lelscan-vf,
+    scan-manga and scan-vf
     """
 
-    search_elem : DOMElem   # bar de rechercher de la page d'accueil
-    search_val  : str       # value to enter in the search bar
-
+    #only for jascan and scantrad-union
+    search_menu   : DOMElem   # Used to access the research bar
+    search_elem   : DOMElem   # Search bar of the homepage
+    search_val    : str       # Value to enter in the search bar
+    search_result : DOMElem   # Click on the first result of the research
+    search_chap   : DOMElem   # Search the first chapter of the manga
+    search_start  : DOMElem   # Search for the start reading button (only scan manga)
 
     @classmethod
     def from_dict(cls, value):
