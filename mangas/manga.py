@@ -2,6 +2,10 @@ from __future__ import annotations
 import os
 import json
 from uuid import uuid4
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote.webelement import WebElement
 
 LEN_IMG_ID = 16
 IMG_EXT    = ".png"
@@ -28,7 +32,24 @@ class Lang:
         else:
             raise TypeError(f"Language must be either of type {repr(Lang)} or of type int")
 
+DOMElem = namedtuple("DOMElem", "by value")
+
+class DOMElem:
+
+    by      : By  #Search method to find the particular element
+    value   : str #search value
+
+    def __init__(self, by, val):
+        self.by     = by
+        self.value  = val
+
 class Scraper:
+    """
+    """
+
+    search_elem : DOMElem   # bar de rechercher de la page d'accueil
+    search_val  : str       # value to enter in the search bar
+
 
     @classmethod
     def from_dict(cls, value):
