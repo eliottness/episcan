@@ -12,4 +12,4 @@ Just install libraries:
 
 ### Install
 
-The dockerization has not started yet there is nothing more to do
+The dockerization has not started yet there is nothing more to do.
