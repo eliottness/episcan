@@ -2,10 +2,7 @@ from __future__ import annotations
 import os
 import json
 from uuid import uuid4
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.remote.webelement import WebElement
+from .scraper import graph
 
 LEN_IMG_ID = 16
 IMG_EXT    = ".png"
@@ -32,37 +29,6 @@ class Lang:
         else:
             raise TypeError(f"Language must be either of type {repr(Lang)} or of type int")
 
-DOMElem = namedtuple("DOMElem", "by value")
-
-class DOMElem:
-
-    by      : By  #Search method to find the particular element
-    value   : str #search value
-
-    def __init__(self, by, val):
-        self.by     = by
-        self.value  = val
-
-class Scraper:
-    """
-    Would work for Japscan, scantrad-union, lelscan-vf,
-    scan-manga and scan-vf
-    """
-
-    #only for jascan and scantrad-union
-    search_menu   : DOMElem   # Used to access the research bar
-    search_elem   : DOMElem   # Search bar of the homepage
-    search_val    : str       # Value to enter in the search bar
-    search_result : DOMElem   # Click on the first result of the research
-    search_chap   : DOMElem   # Search the first chapter of the manga
-    search_start  : DOMElem   # Search for the start reading button (only scan manga)
-
-    @classmethod
-    def from_dict(cls, value):
-        return cls()
-
-    def to_dict(self):
-        return None
 
 class Chapter:
     """
@@ -74,12 +40,12 @@ class Chapter:
     next  : Chapter        #previous chapter, None if empty
     prev  : Chapter        #next chapter, None if empty
     num   : float          #chapter number
-    lang  : Lang           #can be RAW, VUS, VF or unknown for now
+    lang  : enum[Lang]     #can be RAW, VUS, VF or unknown for now
     pages : list[str]      #str uuid
 
     @classmethod
-    def from_dict(self, value):
-        c       = Chapter(value[0], value[1])
+    def from_dict(cls, value):
+        c       = cls(value[0], value[1])
         c.pages = value[2]
 
         return c
@@ -143,8 +109,8 @@ class Manga:
     filename    : str                  #Manga name adapted to filenames
     name        : str                  #Manga name
     chapters    : dict[float, Chapter] #chap_number->Chapter object
-    lang        : Lang                 #The manga language
-    scraper_data: Scraper              #All the data needed to download chapters
+    lang        : enum[Lang]           #The manga language
+    scraper_data: graph.Scraper        #All the data needed to download chapters
 
     @staticmethod
     def load_manga(filename):
