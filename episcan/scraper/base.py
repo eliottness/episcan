@@ -7,22 +7,6 @@ from selenium.webdriver.common.by import By
 
 class DOMElem:
 
-    ###########################
-    ### Key elements
-    ###########################
-    search_menu      = 0        # Used to access the research bar
-    first_search_res = 1        # Click on the first result of the research
-
-
-    #only for jascan and scantrad-union
-    search_menu   : DOMElem   # Used to access the research bar
-    search_elem   : DOMElem   # Search bar of the homepage
-    search_val    : str       # Value to enter in the search bar
-    search_result : DOMElem   # Click on the first result of the research
-    search_chap   : DOMElem   # Search the first chapter of the manga
-    search_start  : DOMElem   # Search for the start reading button (only scan manga)
-
-
     by        : By  # Search method to find the particular element
     value     : str # Search value
     send_keys : str # Keys to enter if the value is a field
@@ -66,15 +50,14 @@ class Scraper:
         """ Update the manga with all the chapters"""
         new_list = self.find_chapter_list()
         old_list = self.manga.chap_num_list
+        recheck  = self.manga.chap_to_recheck
         diff     = set(new_list) - set(old_list)
 
         for num in diff:
             self.download_chapter(num)
 
-        old_recheck  = self.manga.chap_to_recheck
-        new_recheck  = [self.find_chapter_lang(x) for x in old_recheck]
-
-        for num, new_lang in zip(old_recheck, new_recheck):
+        for num in recheck:
             old_lang = self.manga.chapters[num].lang
+            new_lang = self.find_chapter_lang(num)
             if old_lang != new_lang:
-                self.download_chapter(num, ov overwrite=True)
+                self.download_chapter(num, overwrite=True)

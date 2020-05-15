@@ -157,6 +157,9 @@ class Manga:
         self.scraper_data = scraper_data
         self.chapters     = dict()
 
+    def update(self):
+        self.scraper_data.update_manga()
+
     def find_chapter(self, chap_num):
 
         if type(chap_num) is not float:
