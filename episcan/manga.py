@@ -172,6 +172,17 @@ class Manga:
         """Sorted list of chapter numbers"""
         return list(sorted(self.chapters.keys()))
 
+    @property
+    def chap_to_recheck(self):
+        """
+        return all the chapter which are in the wrong lang to re_download
+        if the lang has changed
+        """
+        return list(sorted(filter(
+                    lambda x: self.chapters[x].lang != self.lang,
+                    self.chapters.keys()
+                )))
+
     def add_chapter(self, chapter, overwrite=False):
         """
         add a chapter to this manga, the chapter instance should already have:
