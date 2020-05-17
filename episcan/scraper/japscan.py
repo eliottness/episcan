@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from .. import manga as mg
+from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from .base import Scraper, DOMElem
 
-class Japscan:
+from ..lang import Lang
+
+class Japscan(Scraper):
 
     base_url = "https://www.japscan.co/"
 
@@ -20,10 +22,32 @@ class Japscan:
     search_chap   : DOMElem   # Search the first chapter of the manga
     search_start  : DOMElem   # Search for the start reading button (only scan manga)
 
+    chapter_list_url : str
+    chapter_list = DOMElem(By.ID, "chapters_list")
+
 
     @classmethod
     def from_dict(cls, value):
         return cls()
 
     def to_dict(self):
-        return None
+        return ['japscan']
+
+    def find_chapter_lang(self, num: float = None): #-> enum[mg.Lang]
+        """ find the language of the chapter (VF, VUS, RAW...) """
+        self._check_open()
+
+    def find_the_number_of_pages(self): #-> int
+        """ find the number of page of this chapter """
+        self._check_open()
+
+    def find_chapters_list(self): #-> list[float]
+        """ Find the list of chapter numbers """
+        self._check_open()
+        self.driver.get(self.chapter_list_url)
+        
+
+
+    def download_chapter(self, num: float, overwrite=False):
+        """ Download a Chapter and add it to the manga data """
+        self._check_open()

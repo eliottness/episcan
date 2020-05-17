@@ -2,7 +2,6 @@ from __future__ import annotations
 import os
 import json
 
-from .. import manga as mg
 from selenium.webdriver.common.by import By
 
 class DOMElem:
@@ -21,7 +20,9 @@ class Scraper:
     The data needed by the scraper process to function
     """
 
-    manga: mg.Manga
+    manga:  Manga
+    driver: HeadlessChrome
+
 
     @classmethod
     def from_dict(cls, value):
@@ -30,15 +31,30 @@ class Scraper:
     def to_dict(self):
         return None
 
-    def find_chapter_lang(self, num: float = None): -> enum[mg.Lang]
+    @property
+    def opened(self):
+        return hasattr(self, 'driver')
+
+    def open(self, driver):
+        driver._check_open()
+        self.driver = driver
+
+    def _check_open(self):
+        if not hasattr(self, 'driver'):
+            raise ValueError("Chrome Driver is not open, please use HeadlessChrome in a 'with' clause")
+
+    def close(self):
+        del self.driver
+
+    def find_chapter_lang(self, num: float = None): #-> enum[Lang]
         """ find the language of the chapter (VF, VUS, RAW...) """
         raise NotImplementedError()
 
-    def find_the_number_of_pages(self): -> int
+    def find_the_number_of_pages(self): #-> int
         """ find the number of page of this chapter """
         raise NotImplementedError()
 
-    def find_chapters_list(self): -> list[float]
+    def find_chapters_list(self): #-> list[float]
         """ Find the list of chapter numbers """
         raise NotImplementedError()
 

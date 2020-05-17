@@ -2,32 +2,20 @@ from __future__ import annotations
 import os
 import json
 from uuid import uuid4
-from .scraper import graph
+from scraper.japscan import Japscan
+from lang import Lang
 
 LEN_IMG_ID = 16
 IMG_EXT    = ".png"
 IMAGES_DIR = os.path.join("images", '') #makes either 'images/' or 'images\'
 MANGAS_DIR = os.path.join("mangas", '')
 
+SCRAPER_CLASSES = {
+    "japscan": Japscan,
+}
+
 def img_file(page_name):
     return IMAGES_DIR + page_name + IMG_EXT
-
-class Lang:
-    UnK = 0
-    RAW = 1
-    VUS = 2
-    VF  = 3
-
-    from_int = [UnK, RAW, VUS, VF]
-
-    @staticmethod
-    def get_lang(lang):
-        if isinstance(lang, Lang):
-            return lang
-        elif type(lang) is int and lang >= 0 and lang < len(Lang.from_int):
-            return Lang.from_int[lang]
-        else:
-            raise TypeError(f"Language must be either of type {repr(Lang)} or of type int")
 
 
 class Chapter:
@@ -119,7 +107,7 @@ class Manga:
 
     @classmethod
     def from_dict(cls, filename, value):
-        m = cls(filename, value[0], value[1], Scraper.from_dict(value[2]))
+        m = cls(filename, value[0], value[1], SCRAPER_CLASSES[value[2][0]].from_dict(value[2]))
 
         for k, v in value[3].items():
             m.chapters[float(k)] = Chapter.from_dict(v)

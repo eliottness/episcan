@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
 
-DOMElem = namedtuple("DOMElem", "by value")
+from base import Scraper, DOMElem
 
 class HeadlessChrome:
 
@@ -79,7 +79,7 @@ class HeadlessChrome:
 
     def _check_open(self):
         if not hasattr(self, 'chrome'):
-            raise ValueError("Please use this method within a 'with' clause")
+            raise ValueError("Chrome Driver is not open, please use HeadlessChrome in a 'with' clause")
 
 
     def find_elem(self, elem, timeout=10):
@@ -103,7 +103,7 @@ class HeadlessChrome:
 
         return dfs[0]
 
-    def wait_for(self, url, timeout=float('+inf')):
+    def wait_for_url(self, url, timeout=float('+inf')):
         self._check_open()
         i = 0
 
