@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<title>Lecture Manga Scan</title>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="keywords" content="One Piece 979, One Piece 979 FR, One Piece 979 VF Lecture En Ligne">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/css/mdb.min.css">
+
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.18.3/slimselect.min.css" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.18.3/slimselect.js"></script>
+
+	<link href="/scripts/reader.css" rel="stylesheet">
+
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+	<div class="container">
+
+		<nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top py-lg-1">
+
+	<a class="navbar-brand" href="/">Accueil</a>
+
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#TogglerNav">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="TogglerNav">
+
+		<ul class="navbar-nav">
+			<li class="nav-item">
+				<a class="text-truncate nav-link" href="/">Accueil</a>
+			</li>
+			<li class="nav-item">
+				<a class="text-truncate nav-link" href="/mangas/">Tous Les Mangas</a>
+			</li>
+			<li class="nav-item">
+				<a class="text-truncate nav-link" href="/rss/" target="_blank">RSS</a>
+			</li>
+		</ul>
+
+		<div id="searchForm" class="has-search w-50">
+			<span class="fa fa-search form-control-feedback"></span>
+			<input id="searchInput" type="text" class="form-control" placeholder="Chercher par manga ou nom d'auteur" autocomplete="off" />
+		</div>
+
+		<div id="results">
+
+		</div>
+
+	</div>
+</nav>
+
+		<h1 class="text-center mt-2 font-weight-bold">{{name}} {{chap}} {{lang}} </h1>
+
+		<nav aria-label="breadcrumb">
+
+			<ol class="breadcrumb justify-content-center">
+				<li class="breadcrumb-item"><a href="/">Accueil</a></li>
+				<li class="breadcrumb-item"><a href="/mangas/">Mangas</a></li>
+				<li class="breadcrumb-item"><a href="/manga/{{name}}/">{{name}}</a></li>
+
+				<li data-timestamp="1588971390" data-chapter-url="/lecture-en-ligne/manga/{{chap}}/" class="breadcrumb-item active" aria-current="page">Chap {{chap}}</li>
+				<li class="breadcrumb-item active" aria-current="page">Page {{page}}</li>
+			</ol>
+
+		</nav>
+
+		<div class="row justify-content-center ">
+
+			<div class="div-select col-xs-12 col-lg-6">
+
+				<select id="chapters" tabindex="-1" data-ssid="ss-36876" style="display: none;">
+
+				  <!-- ex: chapters = ["mangas/name-name//chapter"...]-->
+					{% for i, url in chapters %}
+						<option selected   value={{url}}>Chap {{i}}: {{title}}</option>
+					{% endfor %}
+
+				</select>
+					<div class="ss-36876 ss-main" style="">
+						<div class="ss-single-selected">
+							<span class="placeholder">Chap {{chap}}: {{title}}</span>
+							<span class="ss-deselect ss-hide">X</span>
+							<span class="ss-arrow">
+								<span class="arrow-down">
+								</span>
+							</span>
+						</div>
+						<div class="ss-content">
+							<div class="ss-search">
+								<input type="search" placeholder="Search" tabindex="0">
+							</div>
+							<div class="ss-list">
+
+								{% for i, url in chapters %}
+									<div class="ss-option ss-disabled">Chap {{i}}: {{title}}</div>
+								{% endfor %}
+
+							</div>
+						</div>
+					</div>
+
+			<div class="div-select col-xs-2 col-lg-2" style="display: block;">
+
+				<select id="pages" tabindex="-1" data-ssid="ss-81031" style="display:none;">
+
+					<!-- ex: pages = ["mangas/name-name/chapter//page"...]-->
+					{% for i, url in pages %}
+					  <option selected   value={{url}}>Page {{i}}</option>
+					{% endfor %}
+
+				</select>
+					<div class="ss-81031 ss-main" style="">
+						<div class="ss-single-selected">
+							<span class="placeholder">Page {{page}}</span>
+							<span class="ss-deselect ss-hide">X</span>
+							<span class="ss-arrow">
+								<span class="arrow-down"> </span>
+							</span>
+						</div>
+						<div class="ss-content">
+							<div class="ss-search"><input type="search" placeholder="Search" tabindex="0"></div>
+							<div class="ss-list">
+							<div class="ss-option ss-disabled" data-id="16233661">Page 01</div>
+
+							{% for i, url in pages %}
+							  <div class="ss-option">Page {{i}}</option></div>
+							{% endfor %}
+						</div>
+						</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+
+
+	<div class="container text-center">
+
+		<div class="d-flex justify-content-center mt-3">
+
+			<div>
+
+				<a href="{{next_link}}">
+				<img id="image" src="{{image}}">
+
+			</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<div class="container mt-4">
+
+		<div class="card">
+			<div class="rounded-0 card-header bg-dark text-white">
+				<h5 class="font-weight-bold">Informations Sur Le Scan</h5>
+			</div>
+			<div class="rounded-0 card-body">
+				<div class="clearfix">
+
+											<p><span class="font-weight-bold">Manga</span>: {{name}}</p>
+											<p><span class="font-weight-bold">Chapitre</span>: {{chap}}</p>
+											<p><span class="font-weight-bold">Langue</span>: {{lang}}</p>
+											<p><span class="font-weight-bold">Titre</span>: {{title}}</p>
+											<p><span class="font-weight-bold">Date</span>: {{date}}</p>
+											<p><span class="font-weight-bold">Nombre De Pages</span>: {{nb_pages}}</p>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
