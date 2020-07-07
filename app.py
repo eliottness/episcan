@@ -1,3 +1,3 @@
-from server import app
+from episcan import app
 
 app.main()
