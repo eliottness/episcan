@@ -1,0 +1,227 @@
+<!doctype html>
+<!--manga_title-->
+<!--chapter_num-->
+<!--manga_home_url-->
+<!--chapters_url_list: [(num, url) for num in all_chapters_num and url in all_chapters_url]-->
+<!--prev_chap_url NEED A FULL URL-->
+<!--next_chap_url NEED A FULL URL-->
+<!--page_num-->
+<!--chapter_nb_pages-->
+<!--images_id-->
+<html lang="fr">
+    <head>
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>
+            {{ manga_title }}
+        </title>
+        <meta name="description" content="Lecture en ligne Scan {{ manga_title }} {{ chapter_num }}"/>
+        <meta name="keywords" content="Chapitres {{ manga_title }} , Scan {{ manga_title }}"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+
+        <meta name="google-site-verification" content="" />
+
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/reader.css">
+        <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/static/css/bootstrap-select.min.css">
+
+        <script src="/static/js/jquery-1.11.0.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/bootstrap-select.min.js"></script>
+        <script src="/static/js/jquery.unveil.js"></script>
+        <script src="/static/js/jquery.plugins.js"></script>
+
+    </head>
+    <body>
+
+        <!-- Website Menu -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <h2 class="navbar-brand-logo " style="margin:0;">
+                        <a class="navbar-brand" href="/">
+                                                        <img alt="Episcan" src="/static/logo.png"/>
+                            <span style="display: none">Episcan</span>
+                                                    </a>
+                    </h2>
+                </div>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav  navbar-right ">
+                                                                                                                        <!-- Notifications Menu -->
+                                                                                                    <li>
+                            <!-- Button report bug -->
+                            <a href="" class="btn-lg" data-toggle="modal" data-target="#myModal" title="report broken image">
+                                <i class="fa fa-bug"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="navbar-collapse-1" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ manga_home_url }}">{{ manga_title }}</a></li>
+
+                        <li id="chapter-list" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Autres chapitres<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                {% for num, url in chapters_url_list %}
+                                    <li {%+ if num == chapter_num %} class="active" {% endif %}><a href="{{ url }}">Chapitre {{ num }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!--/ Website Menu -->
+
+        <div class="container-fluid">
+            <div class="pager-cnt">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ul class="pager pull-left" style="margin: 6px 0;">
+                            <li class="previous">
+                                <a href="prev_chap_url">←prev chapter</a>
+                            </li>
+                        </ul>
+                    <div class="page-nav" style="margin: 0 auto;">
+                        <ul class="pager">
+                            <li class="previous">
+                                <a href="#" onclick="return prevPage();">←préc</a>
+                            </li>
+                        </ul>
+                        <select id="page-list" class="selectpicker" data-style="btn-primary" data-width="auto" data-size="20">
+                                {% for i in range(chapter_nb_pages) %}
+                                    <option {%+ if i == page_num %} selected {% endif %}>{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                                                        <ul class="pager">
+                                <li class="next">
+                                    <a href="#" onclick="return nextPage();">suiv→</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="viewer-cnt">
+                <div class="row">
+                    <div class="col-sm-2 hidden-xs" style="position: relative">
+                        <div style="left: 0; right: 0; margin: 0 auto; position: absolute; display: table;">
+                            <script type='text/javascript' src=></script>
+                            <br/>
+                            <div id="bg_2435164108"></div><script type="text/javascript" src="#"></script>
+
+<script type="text/javascript" data-cfasync="false">
+  if(!window.BB_a) { BB_a = [];} if(!window.BB_ind) { BB_ind = 0; } if(!window.BB_vrsa) { BB_vrsa = 'v3'; }if(!window.BB_r) { BB_r = Math.floor(Math.random()*1000000000)} BB_ind++; BB_a.push({ "pl" : 2005201, "index": BB_ind});
+</script>
+<script type="text/javascript" data-cfasync="false">
+  document.write('<scr'+'ipt async data-cfasync="false" id="BB_SLOT_'+BB_r+'_'+BB_ind+'" src=""></scr'+'ipt>');
+</script>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-8">
+                        <div id="ppp" style="">
+                            <a href="#" onclick="return nextPage();">
+                                <img id="page-img" class="img-responsive scan-page" src="{{ images_id[page_num - 1] }}"/>
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-2 hidden-xs" style="position: relative">
+                        <div style="left: 0; right: 0; margin: 0 auto; position: absolute; display: table;">
+                            <script type="text/javascript" data-cfasync="false">
+  if(!window.BB_a) { BB_a = [];} if(!window.BB_ind) { BB_ind = 0; } if(!window.BB_vrsa) { BB_vrsa = 'v3'; }if(!window.BB_r) { BB_r = Math.floor(Math.random()*1000000000)} BB_ind++; BB_a.push({ "pl" : 2005201, "index": BB_ind});
+</script>
+<script type="text/javascript" data-cfasync="false">
+  document.write('<scr'+'ipt async data-cfasync="false" id="BB_SLOT_'+BB_r+'_'+BB_ind+'" src=""></scr'+'ipt>');
+</script>
+                            <br/>
+                            <script type='text/javascript' src=''></script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pager-cnt">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ul class="pager pull-left" style="margin: 6px 0;">
+                            <li class="previous">
+                                <a href="#" onclick="return prevChap();">←prev chapter</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row" style="">
+                    <div class="col-xs-12">
+                        <div class="alert alert-warning tips-rtl">
+                            <div class="page-header" style="margin: 0">
+                                <h1><center><b> Scan {{ manga_title }} : {{ chapter_num }}</b>
+</center></h1><span class="pager-cnt" style=""><center><small> - Page <span class="pagenumber">{{ page_num }}</span></small></center></span>                            </div>
+                            <div>
+                                <strong>Astuce:</strong>
+                                <p>
+                                    Cliquer sur l'image <em>{{ manga_title }} {{ chapter_num }} manga</em> pour aller à la page suivante. Vous pouvez utiliser les flêches de votre clavier pour naviguer entre les pages.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                {% include "lecture.js" %}
+            </script>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document" style="z-index: 9999">
+                <div class="modal-content">
+                    <form method="POST" action="#" accept-charset="UTF-8" role="form"><input name="_token" type="hidden" value="8bI3RrxoXGwbSn9ZogGxwfemrbxZFXPdOPQFbumd">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">report broken image</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <input type="hidden" name="broken-image" value="">
+                        </div>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12">
+                                <label for="email">email</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                            </div>
+                        </div>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 controls">
+                                <label for="message">message</label>
+                                <textarea rows="3" class="form-control" id="subject" name="subject"></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                                            </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+                        <button type="submit" class="btn btn-primary">send</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

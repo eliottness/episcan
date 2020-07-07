@@ -10,19 +10,29 @@ class DOMElem:
     value     : str # Search value
     send_keys : str # Keys to enter if the value is a field
 
-    def __init__(self, by, val):
+    def __init__(self, by, val, keys=None):
         self.by         = by
         self.value      = val
-        self.send_keys  = None
+        self.send_keys  = keys
 
 class Scraper:
     """
     The data needed by the scraper process to function
     """
 
-    manga:  Manga
-    driver: HeadlessChrome
+    manga:  Manga           # the manga were all info are lito be stored
+    driver: HeadlessChrome  # the driver to run instructions when opened
+    init_args: List[str]    # the list of args to init at the add of the mangas
 
+    #e.g. The scraper to a certain webstie needs the url toe the list of chapters
+    #of this mangas => init_args = ['chapters_list_url']
+
+    def __init__(self, *args):
+        if len(self.init_args) != len(args):
+            raise TypeError(f"The positional arguments required are {self.init_args}")
+
+        for attr, arg in zip(self.init_args, args):
+            setattr(attr, arg)
 
     @classmethod
     def from_dict(cls, value):
