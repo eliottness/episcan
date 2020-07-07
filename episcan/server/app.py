@@ -16,3 +16,6 @@ data = {
 @app.route('/')
 def lecture():
     return render_template("lecture.html", **data)
+
+if __name__ == "__main__":
+    app.run(debug=True)

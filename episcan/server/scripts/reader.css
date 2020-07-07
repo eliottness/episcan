@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css?family=Acme|Noto+Sans');
+
+body
+{
+	margin:0;
+	background: url("/imgs/bg.jpg");
+	font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@media (min-width: 1440px)
+{
+	.container
+	{
+		max-width: 1440px;
+	}
+}
+
+#menu
+{
+	padding:0;
+	font-weight:bold;
+}
+
+.row
+{
+	margin:0;
+	width:100%;
+}
+
+.div-select
+{
+	padding-right:0!important;
+	padding-left:0!important;
+}
+
+select
+{
+	padding:0 10px;
+}
+
+h1
+{
+	line-height: 1;
+}
+
+#menu1 > .col-md-6
+{
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.ss-main .ss-single-selected
+{
+	border-radius:0px;
+}
+
+.choices__inner
+{
+	border-radius:0px;
+}
+
+.ss-main .ss-single-selected
+{
+	height: 40px;
+}
+
+#searchForm
+{
+	margin-left:auto!important;
+	margin-right:0!important;
+}
+
+#searchInput
+{
+	border-radius: 0;
+}
+
+#searchInput:focus
+{
+	box-shadow: none;
+	border-color: none;
+}
+
+#results
+{
+	max-height:500px;
+	display:block;
+	position:absolute;
+	overflow: auto;
+}
+
+#results img
+{
+	width:80px;
+}
+
+#results .list-group-item:hover
+{
+	background-color: #F2F1EF;
+}
+
+#results .highlight
+{
+	color: #dc3545;
+}
+
+.has-search .form-control
+{
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback
+{
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+#infos2
+{
+	display: table;
+    margin-left: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+#infos2 li
+{
+    display: table-row;
+    counter-increment: table-ol;
+}
+
+#infos2 li::before
+{
+    content: counter(table-ol) ".";
+    display: table-cell;
+    padding-right: .4em;
+    text-align: right;
+    font-weight: 700;
+}
+
+.breadcrumb
+{
+	background:none;
+	padding-top:0;
+	margin-bottom:0
+}
+
+.FbsYi {
+	display:none;
+	overflow:hidden;
+}
+
+#image img {
+	width:100%;
+}
+
+mark {
+	color: #1abc9c;
+	background:none;
+	padding:0;
+}
