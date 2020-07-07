@@ -51,6 +51,10 @@ class Chapter:
         self.pages = list()
         self.lang  = Lang.get_lang(lang)
 
+    @property
+    def nb_pages(self):
+        return len(self.pages)
+
     def add_page(self, name, page_num):
 
         if not isinstance(page_num, int):

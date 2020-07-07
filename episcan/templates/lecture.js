@@ -6,9 +6,9 @@ var next_chapter =  "{{ next_chap_url }}" ;
 var prev_chapter =  "{{ prev_chap_url }}" ;
 
 
-var current_page = {{ page_num }};
+var current_page = 1;
 
-var base_url = "/static/images";
+var base_url = "{{ images_route }}";
 
 var initialized = false;
 
@@ -16,9 +16,6 @@ jQuery(document).ready(function () {
     $('.selectpicker').selectpicker();
     if ($("div#all").is(":visible"))
         $("div#all img").unveil(300);
-
-    // refresh test
-    //preload(current_page);
 });
 
 // refresh test
@@ -56,11 +53,6 @@ function nextChap(){
 
 function prevChap(){
     window.location = prev_chapter;
-}
-
-function update_numberPanel() {
-    $('#page-list').selectpicker('val', current_page);
-    $('.pagenumber').text(current_page);
 }
 
 $('a#modePPP').click(function (e) {

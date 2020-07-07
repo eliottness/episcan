@@ -5,6 +5,7 @@ class Lang:
     VF = 3
 
     from_int = [UnK, RAW, VUS, VF]
+    to_str   = ["Unknown lang", "RAW", "VUS", "VF"]
 
     @staticmethod
     def get_lang(lang):
