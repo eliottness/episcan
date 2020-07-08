@@ -91,8 +91,9 @@ class Manga:
     """
 
     #Memory optimization
-    __slots__ = ['filename', 'name', 'chapters', 'lang', 'scraper_data']
+    __slots__ = ['image_path', 'filename', 'name', 'chapters', 'lang', 'scraper_data']
 
+    image_path  : str                  # Path to the thumbnail of the manga
     filename    : str                  #Manga name adapted to filenames
     name        : str                  #Manga name
     chapters    : dict[float, Chapter] #chap_number->Chapter object
@@ -106,7 +107,7 @@ class Manga:
 
     @classmethod
     def from_dict(cls, filename, value):
-        m = cls(filename, value[0], value[1], scraper_classes[value[2][0]].from_dict(value[2]))
+        m = cls(filename, value[0], value[1], scraper_classes[value[2][0]].from_dict(value[2]), self.image_path)
 
         for k, v in value[3].items():
             m.chapters[float(k)] = Chapter.from_dict(v)
@@ -133,10 +134,11 @@ class Manga:
         for k, v in self.chapters.items():
             chapters[k] = v.to_dict()
 
-        return [self.name, self.lang, self.scraper_data.to_dict(), chapters]
+        return [self.name, self.lang, self.scraper_data.to_dict(), chapters, self.image_path]
 
-    def __init__(self, filename, name, lang, scraper_data):
+    def __init__(self, filename, name, lang, scraper_data, img_path):
 
+        self.image_path = img_path
         self.filename = filename
         self.name     = name
         self.lang     = Lang.get_lang(lang)

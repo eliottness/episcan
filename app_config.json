@@ -1,4 +1,10 @@
 {
     "images_path": "images/",
-    "scraper_update": 300
+    "scraper_update": 300,
+    "sqlite_db": "app.db",
+    "flask_config":
+    {
+        "CACHE_TYPE": "simple",
+        "CACHE_DEFAULT_TIMEOUT": 300,
+    }
 }
