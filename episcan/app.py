@@ -1,27 +1,56 @@
+import logging
+import json
+
 from flask import Flask, render_template, url_for, send_from_directory
+from flask import request, redirect, abort
 from flask_caching import Cache
 
-from episcan import lang, manga
+from episcan import lang, manga, database
+from episcan.scraper import main as scraper_main
+
+DEBUG       = True
+CONFIG_FILE = "app_config.json"
+
+SCRAPER_CACHE_KEY = "scraper_thread_list"
 
 ###################################
 ### INIT
 ###################################
 
-CONFIG_FILENAME = "app_config.json"
-CONFIG_CACHE    = {
-    "DEBUG": True,          # some Flask specific configs
-    "CACHE_TYPE": "simple", # Flask-Caching related configs
-    "CACHE_DEFAULT_TIMEOUT": 300
-}
-
 app = Flask("episcan")
-app.config.from_mapping(CONFIG_CACHE)
-app.config.from_json(CONFIG_FILENAME)
+app.config["DEBUG"] = DEBUG
+app.config.from_json(CONFIG_FILE)
 cache = Cache(app)
+
+@app.before_request
+def init():
+    cache.set(SCRAPER_CACHE_KEY, list())
 
 ###################################
 ### Backend bindings
 ###################################
+
+def update_manga(manga):
+
+    thrs_list = cache.get(SCRAPER_CACHE_KEY)
+    thrs_list = [thr for thr in thrs_list if thr.is_alive() else del thr]
+
+    thr = scraper_main.Scraper_Deamon(manga)
+    thr.start()
+
+    thrs_list.append(thr)
+
+    cache.set(SCRAPER_CACHE_KEY, thrs_list)
+
+    return thrs
+
+@cache.memoize()
+def find_manga(manga):
+    """
+    Argument: the manga filename
+    returns:  The object of a class Manga corresponding
+    """
+    raise NotImplementedError()
 
 def get_reading_data(manga, chapter):
     """
@@ -49,7 +78,7 @@ def get_reading_data(manga, chapter):
         "manga_title": manga.name,
         "chapter_num": chapter.num,
         "manga_home_url": url_for('manga_home', manga.filename),
-        "chapters_url_list": sorted(manga.chapters),
+        "chapters_url_list": sorted(manga.chapters), # return sorted keys
         "prev_chap_url": url_for('reading', manga.filename, num),
         "next_chap_url": url_for('reading', manga.filename, num),
         "image_url": url_for('image', chapter.pages[0]),
@@ -66,14 +95,18 @@ def get_mangas_list():
         ]}
 
 
+
     return {"list":[
         {
             "name": manga.name,
             "url":  url_for('manga_home', manga.filename)
-        } for manga in mangas
+        } for manga_filename in manga.manga_list()
     ]}
 
 def get_manga_home(manga):
+    """
+    """
+    raise NotImplementedError()
 
     if app.config["DEBUG"]:
         return {
@@ -82,6 +115,7 @@ def get_manga_home(manga):
         }
 
 def get_home_feed():
+    raise NotImplementedError()
     return dict()
 
 ###################################
@@ -121,6 +155,18 @@ def home():
 def image(img_file):
     return send_from_directory(app.config["images_path"], img_file, mimetype="image/png")
 
+
+@app.route('/update', methods=['POST'])
+def update(manga):
+    if "manga" not in request.args:
+        abort(404)
+
+    manga_name = request.args["manga"]
+
+    if manga_name not in database.get_mangas_list():
+        abort(404)
+
+    update_manga(manga_name)
 
 def main():
     app.run(debug=True)
