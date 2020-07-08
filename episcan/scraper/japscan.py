@@ -37,7 +37,7 @@ class Japscan(Scraper):
         return cls(*values[1:])
 
     def to_dict(self):
-        return ['japscan', self.chapter_list_url]
+        return [self.__class__.__name__, self.chapter_list_url]
 
     def find_chapter_lang(self, num: float = None): #-> enum[mg.Lang]
         """ find the language of the chapter (VF, VUS, RAW...) """

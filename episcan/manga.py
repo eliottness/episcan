@@ -2,7 +2,7 @@ from __future__ import annotations
 import os
 import json
 from uuid import uuid4
-from episcan.scraper.japscan import Japscan
+from episcan.scraper import scraper_classes
 from episcan.lang import Lang
 
 LEN_IMG_ID = 16
@@ -10,13 +10,8 @@ IMG_EXT    = ".png"
 IMAGES_DIR = os.path.join("images", '') #makes either 'images/' or 'images\'
 MANGAS_DIR = os.path.join("mangas", '')
 
-SCRAPER_CLASSES = {
-    "japscan": Japscan,
-}
-
 def img_file(page_name):
     return IMAGES_DIR + page_name + IMG_EXT
-
 
 class Chapter:
     """
@@ -111,7 +106,7 @@ class Manga:
 
     @classmethod
     def from_dict(cls, filename, value):
-        m = cls(filename, value[0], value[1], SCRAPER_CLASSES[value[2][0]].from_dict(value[2]))
+        m = cls(filename, value[0], value[1], scraper_classes[value[2][0]].from_dict(value[2]))
 
         for k, v in value[3].items():
             m.chapters[float(k)] = Chapter.from_dict(v)
