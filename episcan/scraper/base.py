@@ -24,7 +24,7 @@ class Scraper:
     driver: HeadlessChrome  # the driver to run instructions when opened
     init_args: List[str]    # the list of args to init at the add of the mangas
 
-    #e.g. The scraper to a certain webstie needs the url toe the list of chapters
+    #e.g. The scraper to a certain website needs the url toe the list of chapters
     #of this mangas => init_args = ['chapters_list_url']
 
     def __init__(self, *args):
@@ -32,7 +32,7 @@ class Scraper:
             raise TypeError(f"The positional arguments required are {self.init_args}")
 
         for attr, arg in zip(self.init_args, args):
-            setattr(attr, arg)
+            setattr(self, attr, arg)
 
     @classmethod
     def from_dict(cls, value):

@@ -1,6 +1,7 @@
 import uuid
 from memory_profiler import profile
-from mangas.manga import * #bad
+from episcan.manga import * #bad
+from episcan.scraper.japscan import Japscan
 
 def chapter_init(num):
     self = Chapter(num, Lang.VF)
@@ -9,7 +10,7 @@ def chapter_init(num):
     return self
 
 def manga_init():
-    self = Manga("one-piece.mg", "One Piece", Lang.VF, Scraper())
+    self = Manga("one-piece.mg", "One Piece", Lang.VF, Japscan("test"))
 
     self.chapters = dict()
     self.chapters[0.0] = chapter_init(0.0)
@@ -26,8 +27,14 @@ def manga_init():
 def main():
     m = manga_init()
     m.save_manga()
-    y = Manga.load_manga("one-piece.mg")
-    y.save_manga("test.mg")
+
+    import timeit
+
+    def func():
+        x = Manga.load_manga("one-piece.mg")
+        del x
+    #print(timeit.timeit(func, number=2000) / 2000)
+    #Do not run the time profiler and the memory profiler
 
 if __name__ == "__main__":
     main()

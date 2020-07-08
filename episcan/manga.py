@@ -2,8 +2,8 @@ from __future__ import annotations
 import os
 import json
 from uuid import uuid4
-from scraper.japscan import Japscan
-from lang import Lang
+from episcan.scraper.japscan import Japscan
+from episcan.lang import Lang
 
 LEN_IMG_ID = 16
 IMG_EXT    = ".png"

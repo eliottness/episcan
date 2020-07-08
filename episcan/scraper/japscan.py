@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
-from .base import Scraper, DOMElem
+from episcan.scraper.base import Scraper, DOMElem
 
-from ..lang import Lang
+from episcan.lang import Lang
 
 class Japscan(Scraper):
 
@@ -33,8 +33,8 @@ class Japscan(Scraper):
     chapter_list_elem = DOMElem(By.CLASS_NAME, "text-dark")
 
     @classmethod
-    def from_dict(cls, value):
-        return cls()
+    def from_dict(cls, values):
+        return cls(*values[1:])
 
     def to_dict(self):
         return ['japscan', self.chapter_list_url]
