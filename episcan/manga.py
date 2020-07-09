@@ -1,5 +1,6 @@
 from __future__ import annotations
 import os
+import sys
 import json
 from uuid import uuid4
 from episcan.scraper import scraper_classes
@@ -7,6 +8,7 @@ from episcan.lang import Lang
 
 LEN_IMG_ID = 16
 IMG_EXT    = ".png"
+MANGA_EXT  = ".mg"
 IMAGES_DIR = os.path.join("images", '') #makes either 'images/' or 'images\'
 MANGAS_DIR = os.path.join("mangas", '')
 
@@ -101,8 +103,18 @@ class Manga:
     scraper_data: graph.Scraper        #All the data needed to download chapters
 
     @staticmethod
+    def iter_all_mangas(logger):
+        for manga in os.listdir(MANGAS_DIR):
+            if len(manga) > 3 and os.isfile(manga) and manga[-3:] == ".mg":
+                try:
+                    yield Manga.load_manga(manga)
+                except Exception as e:
+                    logger.critical(f"Unable to load manga at location {manga}")
+                    sys.exit(1)
+
+    @staticmethod
     def load_manga(filename):
-        with open(MANGAS_DIR + filename, 'r') as fh:
+        with open(MANGAS_DIR + filename + MANGA_EXT, 'r') as fh:
             return Manga.from_dict(filename, json.load(fh))
 
     @classmethod
@@ -124,7 +136,7 @@ class Manga:
         return m
 
     def save_manga(self, filename=None):
-        filename = filename if filename else self.filename
+        filename = filename if filename else self.filename + MANGA_EXT
         with open(MANGAS_DIR + filename, 'w') as fh:
             json.dump(self.to_dict(), fh)
 

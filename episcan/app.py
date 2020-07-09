@@ -24,30 +24,41 @@ app.config.from_json(CONFIG_FILE)
 cache    = Cache(app)
 database = Database(app.config["sqlite_db"], app.logger)
 
-@app.before_request
+@app.before_first_request
 def init():
     cache.set(SCRAPER_CACHE_KEY, list())
 
     if not DEBUG:
-        database.integrity_check()
+        database.health_check()
+
 
 ###################################
 ### Backend bindings
 ###################################
 
 def update_manga(manga):
+    """
+    argument: a manga filename
+    """
 
-    thrs_list = cache.get(SCRAPER_CACHE_KEY)
-    thrs_list = [thr for thr in thrs_list if thr.is_alive() else del thr]
+    old_thrs = cache.get(SCRAPER_CACHE_KEY)
+    thrs     = dict()
 
-    thr = scraper_main.Scraper_Deamon(manga)
-    thr.start()
+    for mg, thr in old_thrs.items():
+        if thr.is_alive():
+            new_thrs[mg] = thr
+        else:
+            del old_thrs[mg]
 
-    thrs_list.append(thr)
+    if not thrs.get(manga):
+        thr = scraper_main.Scraper_Deamon(manga)
+        thr.start()
+        thrs[manga] = thr
+        app.logger.info(f"Started to update {manga}")
+    else:
+        app.logger.warning(f"{manga} is already updating, wait for update to end")
 
-    cache.set(SCRAPER_CACHE_KEY, thrs_list)
-
-    return thrs
+    cache.set(SCRAPER_CACHE_KEY, thrs)
 
 @cache.memoize()
 def find_manga(manga):
@@ -59,7 +70,7 @@ def find_manga(manga):
 
 def get_reading_data(manga, chapter):
     """
-
+    Argument: manga filename, chapter number (float)
     """
 
     if app.config["DEBUG"]:
@@ -97,14 +108,18 @@ def get_mangas_list():
 
     if app.config["DEBUG"]:
         return {"list": [
-            {"name": "Boruto", "url": url_for('manga_home', "boruto")}
+            {
+                "name": "Boruto",
+                "image_path": "images/boruto.png",
+                "url": url_for('manga_home', "boruto")
+            }
         ]}
-
 
 
     return {"list":[
         {
             "name": manga["name"],
+            "image_path": manga["image_path"],
             "url":  url_for('manga_home', manga["filename"])
         } for manga in database.get_all_mangas()
     ]}

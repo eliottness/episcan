@@ -13,7 +13,7 @@ class Scraper_Deamon(threading.Thread):
     """
     def __init__(self, manga):
         threading.Thread.__init__(self)
-        self.manga_filename = manga + ".mg"
+        self.manga_filename = manga
 
     def run(self):
         manga = manga.Manga.load_manga(self.manga_filename)
