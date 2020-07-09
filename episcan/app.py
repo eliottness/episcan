@@ -66,7 +66,7 @@ def find_manga(manga):
     Argument: the manga filename
     returns:  The object of a class Manga corresponding
     """
-    raise NotImplementedError()
+    return manga.Manga.load_manga(manga)
 
 def get_reading_data(manga, chapter):
     """
