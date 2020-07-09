@@ -38,7 +38,7 @@ def init():
 ### Backend bindings
 ###################################
 
-def update_manga(manga):
+def update_manga(mg_file):
     """
     argument: a manga filename
     """
@@ -52,25 +52,25 @@ def update_manga(manga):
         else:
             del old_thrs[mg]
 
-    if not thrs.get(manga):
-        thr = scraper_main.Scraper_Deamon(manga)
+    if not thrs.get(mg_file):
+        thr = scraper_main.Scraper_Deamon(mg_file)
         thr.start()
-        thrs[manga] = thr
-        app.logger.info(f"Started to update {manga}")
+        thrs[mg_file] = thr
+        app.logger.info(f"Started to update {mg_file}")
     else:
-        app.logger.warning(f"{manga} is already updating, wait for update to end")
+        app.logger.warning(f"{mg_file} is already updating, wait for update to end")
 
     cache.set(SCRAPER_CACHE_KEY, thrs)
 
 @cache.memoize()
-def find_manga(manga):
+def find_manga(mg_file):
     """
     Argument: the manga filename
     returns:  The object of a class Manga corresponding
     """
-    return manga.Manga.load_manga(manga)
+    return manga.Manga.load_manga(mg_file)
 
-def get_reading_data(manga, chapter):
+def get_reading_data(mg_file, chapter):
     """
     Argument: manga filename, chapter number (float)
     """
@@ -89,24 +89,24 @@ def get_reading_data(manga, chapter):
             "images_id": ["1.jpg", "2.jpg"]
         }
 
-    manga   = find_manga(manga)
-    chapter = manga.find_chapter(chapter)
+    mg      = find_manga(mg_file)
+    chapter = mg.find_chapter(chapter)
 
     if chapter.prev:
-        prev_url = url_for('reading', manga.filename, chapter.prev.num)
+        prev_url = url_for('reading', mg.filename, chapter.prev.num)
     else:
         prev_url = None
 
     if chapter.next:
-        next_url = url_for('reading', manga.filename, chapter.next.num)
+        next_url = url_for('reading', mg.filename, chapter.next.num)
     else:
         next_url = None
 
     return {
-        "manga_title": manga.name,
+        "manga_title": mg.name,
         "chapter_num": chapter.num,
-        "manga_home_url": url_for('manga_home', manga.filename),
-        "chapters_url_list": sorted(manga.chapters), # return sorted keys
+        "manga_home_url": url_for('manga_home', mg.filename),
+        "chapters_url_list": sorted(mg.chapters), # return sorted keys
         "prev_chap_url": prev_url,
         "next_chap_url": next_urm,
         "image_url": url_for('image', chapter.pages[0]),
@@ -130,14 +130,14 @@ def get_mangas_list():
 
     return {"list":[
         {
-            "name": manga["name"],
-            "image_path": url_for('images', manga["image_path"]),
-            "url":  url_for('manga_home', manga["filename"])
-        } for manga in database.get_all_mangas()
+            "name": mg["name"],
+            "image_path": url_for('images', mg["image_path"]),
+            "url":  url_for('manga_home', mg["filename"])
+        } for mg in database.get_all_mangas()
     ]}
 
 @cache.memoize()
-def get_manga_home(manga):
+def get_manga_home(mg_file):
     """
     """
 
@@ -169,9 +169,9 @@ def lang(lg):
 ### Routes
 ###################################
 
-@app.route('/lecture/<string:manga>/<float:chapter>')
-def reading(manga, chapter):
-    data = get_reading_data(manga, chapter)
+@app.route('/lecture/<string:mg>/<float:chapter>')
+def reading(mg, chapter):
+    data = get_reading_data(mg, chapter)
     if DEBUG2: return jsonify(data)
     return render_template("lecture.html", **data)
 
@@ -181,9 +181,9 @@ def mangas_list():
     if DEBUG2: return jsonify(data)
     return render_template('mangas.html', **data)
 
-@app.route('/manga/<string:manga_name>')
-def manga_home(manga):
-    data = get_manga_home(manga)
+@app.route('/manga/<string:mg>')
+def manga_home(mg):
+    data = get_manga_home(mg)
     if DEBUG2: return jsonify(data)
     return render_template("chapters.html", **data)
 
@@ -199,7 +199,7 @@ def image(img_file):
     return send_from_directory(config["images_path"], img_file, mimetype="image/jpg")
 
 @app.route('/update', methods=['POST'])
-def update(manga):
+def update(mg):
     if "manga" not in request.args:
         abort(404)
 
@@ -212,7 +212,7 @@ def update(manga):
 
 def main():
     init()
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=80)
 
 if __name__ == "__main__":
     main()

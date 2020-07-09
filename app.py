@@ -1,3 +1,3 @@
 from episcan import app
 
-#app.main()
+app.main()
