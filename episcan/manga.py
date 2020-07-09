@@ -7,7 +7,7 @@ from episcan.scraper import scraper_classes
 from episcan.lang import Lang
 
 LEN_IMG_ID = 16
-IMG_EXT    = ".png"
+IMG_EXT    = ".jpg"
 MANGA_EXT  = ".mg"
 IMAGES_DIR = os.path.join("images", '') #makes either 'images/' or 'images\'
 MANGAS_DIR = os.path.join("mangas", '')
@@ -72,7 +72,7 @@ class Chapter:
 
         id   = uuid4().hex[:LEN_IMG_ID]
         file = img_file(id)
-        while not os.path.isfile(file):
+        while os.path.isfile(file):
             id   = uuid4().hex[:LEN_IMG_ID]
             file = img_file(id)
 
@@ -81,6 +81,7 @@ class Chapter:
         if page_num == -1:
             self.pages.append(id)
         else:
+            page_num -= 1
             if os.path.isfile(img_file(self.pages[page_num])):
                 os.remove(img_file(self.pages[page_num]))
 
@@ -119,7 +120,7 @@ class Manga:
 
     @classmethod
     def from_dict(cls, filename, value):
-        m = cls(filename, value[0], value[1], scraper_classes[value[2][0]].from_dict(value[2]), self.image_path)
+        m = cls(filename, value[0], value[1], scraper_classes[value[2][0]].from_dict(value[2]), value[4])
 
         for k, v in value[3].items():
             m.chapters[float(k)] = Chapter.from_dict(v)
@@ -172,7 +173,7 @@ class Manga:
         return self.chapters[chap_num]
 
     @property
-    def nb_chap:
+    def nb_chap():
         return len(self.chapters)
 
     @property
@@ -205,7 +206,7 @@ class Manga:
         assert hasattr(chapter, 'pages'), "Chapter do not have any pages"
         assert hasattr(chapter, 'lang'), "Chapter do not have a lang"
         assert chapter.num >= 0.0, "Chapter number must be in R+"
-        assert isinstance(chapter.lang, Lang), "Chapter lang must from the Lang class"
+        assert chapter.lang >= 0 and chapter.lang <= 3, "Chapter lang must from the Lang class"
 
         for page in chapter.pages:
             assert type(page) is str and len(page) == LEN_IMG_ID, \

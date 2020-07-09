@@ -27,12 +27,12 @@ class Scraper:
     #e.g. The scraper to a certain website needs the url toe the list of chapters
     #of this mangas => init_args = ['chapters_list_url']
 
-    def __init__(self, *args, **kwargs):
-        if not all(arg in kwargs for arg in self.init_args):
-            raise TypeError(f"The nominal arguments required are {self.init_args}")
+    def __init__(self, *args):
+        if len(self.init_args) != len(args):
+            raise TypeError(f"The positinal arguments required are {self.init_args}")
 
-        for attr in self.init_args:
-            setattr(self, attr, kwargs[attr])
+        for attr, arg in zip(self.init_args, args):
+            setattr(self, attr, arg)
 
     @classmethod
     def from_dict(cls, value):
