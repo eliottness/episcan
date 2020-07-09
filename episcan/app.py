@@ -5,8 +5,9 @@ from flask import Flask, render_template, url_for, send_from_directory
 from flask import request, redirect, abort
 from flask_caching import Cache
 
-from episcan import lang, manga, database
-from episcan.scraper import main as scraper_main
+from episcan import lang, manga
+from episcan.database import Database
+from episcan.scraper  import main as scraper_main
 
 DEBUG       = True
 CONFIG_FILE = "app_config.json"
@@ -20,11 +21,15 @@ SCRAPER_CACHE_KEY = "scraper_thread_list"
 app = Flask("episcan")
 app.config["DEBUG"] = DEBUG
 app.config.from_json(CONFIG_FILE)
-cache = Cache(app)
+cache    = Cache(app)
+database = Database(app.config["sqlite_db"], app.logger)
 
 @app.before_request
 def init():
     cache.set(SCRAPER_CACHE_KEY, list())
+
+    if not DEBUG:
+        database.integrity_check()
 
 ###################################
 ### Backend bindings
@@ -87,6 +92,7 @@ def get_reading_data(manga, chapter):
         "images_id": chapter.pages
     }
 
+@cache.memoize()
 def get_mangas_list():
 
     if app.config["DEBUG"]:
@@ -98,11 +104,12 @@ def get_mangas_list():
 
     return {"list":[
         {
-            "name": manga.name,
-            "url":  url_for('manga_home', manga.filename)
-        } for manga_filename in manga.manga_list()
+            "name": manga["name"],
+            "url":  url_for('manga_home', manga["filename"])
+        } for manga in database.get_all_mangas()
     ]}
 
+@cache.memoize()
 def get_manga_home(manga):
     """
     """
@@ -146,7 +153,7 @@ def manga_home(manga):
     return render_template("chapters.html", **data)
 
 @app.route('/')
-@cache.cached(timeout=300)
+@cache.cached()
 def home():
     data = get_home_feed()
     return render_template('homepage.html', **data)

@@ -160,6 +160,10 @@ class Manga:
         return self.chapters[chap_num]
 
     @property
+    def nb_chap:
+        return len(self.chapters)
+
+    @property
     def chap_num_list(self):
         """Sorted list of chapter numbers"""
         return list(sorted(self.chapters.keys()))
