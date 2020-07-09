@@ -68,6 +68,10 @@ def find_manga(mg_file):
     Argument: the manga filename
     returns:  The object of a class Manga corresponding
     """
+
+    if mg_file not in db_mangas_list():
+        abort(404)
+
     return manga.Manga.load_manga(mg_file)
 
 def get_reading_data(mg_file, chapter):
@@ -93,27 +97,31 @@ def get_reading_data(mg_file, chapter):
     chapter = mg.find_chapter(chapter)
 
     if chapter.prev:
-        prev_url = url_for('reading', mg.filename, chapter.prev.num)
+        prev_url = url_for('reading', mg=mg.filename, chapter=chapter.prev.num)
     else:
         prev_url = None
 
     if chapter.next:
-        next_url = url_for('reading', mg.filename, chapter.next.num)
+        next_url = url_for('reading', mg=mg.filename, chapter=chapter.next.num)
     else:
         next_url = None
 
     return {
         "manga_title": mg.name,
         "chapter_num": chapter.num,
-        "manga_home_url": url_for('manga_home', mg.filename),
+        "manga_home_url": url_for('manga_home', mg=mg.filename),
         "chapters_url_list": sorted(mg.chapters), # return sorted keys
         "prev_chap_url": prev_url,
-        "next_chap_url": next_urm,
-        "image_url": url_for('image', chapter.pages[0]),
+        "next_chap_url": next_url,
+        "image_url": url_for('images', img_file=chapter.pages[0]),
         "chapter_nb_pages": chapter.nb_pages,
         "images_route": config["images_route"],
         "images_id": chapter.pages
     }
+
+@cache.cached(key_prefix="db_mangas_list")
+def db_mangas_list():
+    return database.get_mangas_list()
 
 @cache.memoize()
 def get_mangas_list():
@@ -122,8 +130,8 @@ def get_mangas_list():
         return {"list": [
             {
                 "name": "Boruto",
-                "image_path": url_for('images', "boruto.jpg"),
-                "url": url_for('manga_home', "boruto")
+                "image_path": url_for('images', img_file="boruto.jpg"),
+                "url": url_for('manga_home', mg="boruto")
             }
         ]}
 
@@ -131,8 +139,8 @@ def get_mangas_list():
     return {"list":[
         {
             "name": mg["name"],
-            "image_path": url_for('images', mg["image_path"]),
-            "url":  url_for('manga_home', mg["filename"])
+            "image_path": url_for('images', img_file=mg["image_path"]),
+            "url":  url_for('manga_home', mg=mg["filename"])
         } for mg in database.get_all_mangas()
     ]}
 
@@ -195,7 +203,7 @@ def home():
     return render_template('homepage.html', **data)
 
 @app.route('{}<img_file>'.format(config["images_route"]))
-def image(img_file):
+def images(img_file):
     return send_from_directory(config["images_path"], img_file, mimetype="image/jpg")
 
 @app.route('/update', methods=['POST'])
