@@ -2,7 +2,7 @@ import sqlite3
 import time
 import datetime as dt
 
-__doc__ = '''
+__doc__ = r'''
 
 CREATE TABLE "manga_list" (
 	"manga_name"	TEXT NOT NULL,
@@ -90,4 +90,9 @@ class Database:
         self.__query(sql, (manga.filename, manga.nb_chap, now, now, manga.image_path))
 
     def integrity_check(self):
+
+        mangas = self.get_mangas_list()
+
+        
+
         pass

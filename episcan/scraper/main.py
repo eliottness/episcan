@@ -1,8 +1,8 @@
 import threading
 
 from episcan import manga, lang, database
-
-import episcan.scraper.scraper_classes as scraper_classes
+from episcan.scraper import headless
+from episcan.scraper import scraper_classes
 
 class Scraper_Deamon(threading.Thread):
     """

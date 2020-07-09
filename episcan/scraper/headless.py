@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
 
-from base import Scraper, DOMElem
+from episcan.scraper.base import Scraper, DOMElem
 
 class HeadlessChrome:
 
