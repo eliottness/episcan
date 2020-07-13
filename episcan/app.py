@@ -38,10 +38,15 @@ def init():
 ### Backend bindings
 ###################################
 
+def update_all():
+    pass
+
 def update_manga(mg_file):
     """
     argument: a manga filename
     """
+
+    return
 
     old_thrs = cache.get(SCRAPER_CACHE_KEY)
     thrs     = dict()
@@ -123,6 +128,10 @@ def get_reading_data(mg_file, chapter):
 def db_mangas_list():
     return database.get_mangas_list()
 
+def filter_mangas(data, query):
+    #TODO
+    return data
+
 @cache.memoize()
 def get_mangas_list():
 
@@ -149,6 +158,8 @@ def get_manga_home(mg_file):
     """
     """
 
+    #TODO
+
     if DEBUG:
         return {
             "name":"Boruto",
@@ -160,7 +171,7 @@ def get_manga_home(mg_file):
     raise NotImplementedError()
 
 def get_home_feed():
-
+    #TODO
     return dict()
 
     raise NotImplementedError()
@@ -185,7 +196,12 @@ def reading(mg, chapter):
 
 @app.route('/mangas_list')
 def mangas_list():
+
     data = get_mangas_list()
+
+    if "search" in request.args:
+        data = filter_mangas(data, request.args["search"])
+
     if DEBUG2: return jsonify(data)
     return render_template('mangas.html', **data)
 
@@ -213,10 +229,29 @@ def update(mg):
 
     manga_name = request.args["manga"]
 
+    if manga_name == "__all__":
+        update_all()
+
     if manga_name not in database.get_mangas_list():
         abort(404)
 
     update_manga(manga_name)
+
+@app.route('/add_manga', methods=['GET', 'POST'])
+def add_manga():
+    return "Add_Manga page" #TODO
+
+@app.route('search'):
+def manga_search():
+    if "manga" not in request.args:
+        abort(404)
+    #TODO
+
+    data = get_mangas_list()
+    data = filter_mangas(data, request.args["manga"])
+
+    return jsonify(data)
+
 
 def main():
     init()
