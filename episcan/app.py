@@ -10,7 +10,7 @@ from episcan.database import Database
 from episcan.scraper  import main as scraper_main
 
 DEBUG       = False
-DEBUG2      = True
+DEBUG2      = False
 CONFIG_FILE = "app_config.json"
 
 SCRAPER_CACHE_KEY = "scraper_thread_list"
@@ -89,12 +89,12 @@ def get_reading_data(mg_file, chapter):
             "manga_title": "Boruto",
             "chapter_num": "1",
             "manga_home_url": "/manga_home_url",
-            "chapters_url_list": [(1.0, "/chapters_url_list1"), (3.0, "/chapters_url_list3")],
+            "chapters_url_list": {1.0: "/chapters_url_list1", 3.0:"/chapters_url_list3"},
             "prev_chap_url": "/prev_chap_url",
             "next_chap_url": "/next_chap_url",
             "image_url": "/images/1.jpg",
             "chapter_nb_pages": 2,
-            "images_route": config["images_route"],
+            "images_route": "/images/",
             "images_id": ["1.jpg", "2.jpg"]
         }
 
@@ -115,12 +115,12 @@ def get_reading_data(mg_file, chapter):
         "manga_title": mg.name,
         "chapter_num": chapter.num,
         "manga_home_url": url_for('manga_home', mg=mg.filename),
-        "chapters_url_list": sorted(mg.chapters), # return sorted keys
+        "chapters_url_list": {num: url_for('reading', mg=mg.filename, chapter=num) for num in sorted(mg.chapters)}, # return sorted keys
         "prev_chap_url": prev_url,
         "next_chap_url": next_url,
-        "image_url": url_for('images', img_file=chapter.pages[0]),
+        "image_url": url_for('images', img_file=chapter.first_page),
         "chapter_nb_pages": chapter.nb_pages,
-        "images_route": config["images_route"],
+        "images_route": "/images/",
         "images_id": chapter.pages
     }
 
@@ -180,9 +180,9 @@ def get_home_feed():
 ### Context processors
 ###################################
 
-@app.context_processor
+"""@app.context_processor
 def lang(lg):
-    return lang.Lang.to_str[lg]
+    return lang.Lang.to_str[lg]"""
 
 ###################################
 ### Routes
@@ -192,7 +192,7 @@ def lang(lg):
 def reading(mg, chapter):
     data = get_reading_data(mg, chapter)
     if DEBUG2: return jsonify(data)
-    return render_template("lecture.html", **data)
+    return render_template("reading.html", **data)
 
 @app.route('/mangas_list')
 def mangas_list():
@@ -203,24 +203,25 @@ def mangas_list():
         data = filter_mangas(data, request.args["search"])
 
     if DEBUG2: return jsonify(data)
-    return render_template('mangas.html', **data)
+    return render_template('manga_list.html', **data)
 
 @app.route('/manga/<string:mg>')
 def manga_home(mg):
     data = get_manga_home(mg)
     if DEBUG2: return jsonify(data)
-    return render_template("chapters.html", **data)
+    return render_template("manga_home.html", **data)
 
 @app.route('/')
 @cache.cached()
 def home():
     data = get_home_feed()
     if DEBUG2: return jsonify(data)
-    return render_template('homepage.html', **data)
+    return render_template('index.html', **data)
 
-@app.route('{}<img_file>'.format(config["images_route"]))
+@app.route('/images/<img_file>')
 def images(img_file):
-    return send_from_directory(config["images_path"], img_file, mimetype="image/jpg")
+    import os
+    return send_from_directory(os.path.join('..', config["images_path"]), img_file, mimetype="image/jpg")
 
 @app.route('/update', methods=['POST'])
 def update(mg):
@@ -241,7 +242,7 @@ def update(mg):
 def add_manga():
     return "Add_Manga page" #TODO
 
-@app.route('search'):
+@app.route('/search')
 def manga_search():
     if "manga" not in request.args:
         abort(404)
@@ -255,7 +256,7 @@ def manga_search():
 
 def main():
     init()
-    app.run(debug=True, host="0.0.0.0", port=80)
+    app.run(debug=True) #host="0.0.0.0", port=80)
 
 if __name__ == "__main__":
     main()

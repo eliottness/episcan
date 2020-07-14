@@ -1,6 +1,5 @@
 {
     "images_path": "images/",
-    "images_route": "/images/",
     "scraper_update": 300,
     "sqlite_db": "app_sample.db",
     "flask_config":

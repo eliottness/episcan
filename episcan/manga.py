@@ -49,6 +49,10 @@ class Chapter:
         self.lang  = Lang.get_lang(lang)
 
     @property
+    def first_page(self):
+        return self.pages[0] + IMG_EXT
+
+    @property
     def nb_pages(self):
         return len(self.pages)
 
@@ -106,7 +110,7 @@ class Manga:
     @staticmethod
     def iter_all_mangas(logger):
         for manga in os.listdir(MANGAS_DIR):
-            if len(manga) > 3 and os.isfile(manga) and manga[-3:] == ".mg":
+            if len(manga) > 3 and os.path.isfile(manga) and manga[-3:] == ".mg":
                 try:
                     yield Manga.load_manga(manga)
                 except Exception as e:

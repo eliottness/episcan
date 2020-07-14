@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
-  <link rel="stylesheet" href="wireframe.css">
+  <link rel="stylesheet" href="/static/css/wireframe.css">
 </head>
 
 <body>
@@ -32,19 +32,20 @@
         <div class="col-md-12">
           <div class="row">
             <div class="col-md-4">
-              <h2 class="">Manga 1</h2>
+              <h2 class="">{{ manga_title }}</h2>
             </div>
             <div class="col-md-4">
               <div class="btn-group align-items-center justify-content-center d-flex">
-                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"> chapters</button>
-                <div class="dropdown-menu"> <a class="dropdown-item" href="#">Action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Separated link</a>
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"> Chapitres </button>
+                <div class="dropdown-menu">
+                  {% for num, url in chapters_url_list.items() %}
+                  <a class="dropdown-item" href="{{ url }}">Chapitre {{ num }}</a>
+                  {% endfor %}
                 </div>
               </div>
             </div>
             <div class="col-md-4">
-              <h3 class="text-right">Heading 3 <span class="badge badge-light"> New</span></h3>
+              <h3 class="text-right">Chapitre <span class="badge badge-light">{{ chapter_num }}</span></h3>
             </div>
           </div>
         </div>
@@ -52,18 +53,17 @@
       <div class="row">
         <div class="col-md-12">
           <div class="row">
-            <div class="col-md-4"><a class="btn btn-outline-primary pull-right" href="#">Prev Chap<br></a></div>
+            <div class="col-md-4"><a class="btn btn-outline-primary pull-right" id="prev-chap">←Prev Chap<br></a></div>
             <div class="col-md-4">
               <ul class="pagination justify-content-center">
-                <li class="page-item"> <a class="page-link" href="#">Prev</a> </li>
+                <li class="page-item"> <a id="prev-page" class="page-link">Prev</a> </li>
                 <li class="page-item"> <a class="page-link" href="#">1</a> </li>
-                <li class="page-item"> <a class="page-link" href="#">2</a> </li>
-                <li class="page-item active"> <a class="page-link" href="#">3</a> </li>
-                <li class="page-item"> <a class="page-link" href="#">4</a> </li>
-                <li class="page-item"> <a class="page-link" href="#">Next</a> </li>
+                <li class="page-item active"> <a class="page-link" href="#">...</a> </li>
+                <li class="page-item"> <a class="page-link" href="#">{{ chapter_nb_pages }}</a> </li>
+                <li class="page-item"> <a id="next-page" class="page-link" href="#">Next</a> </li>
               </ul>
             </div>
-            <div class="col-md-4"><a class="btn btn-outline-primary" href="#">Next Chap<br></a></div>
+            <div class="col-md-4"><a class="btn btn-outline-primary" id="next-chap">Next Chap→<br></a></div>
           </div>
         </div>
       </div>
@@ -72,32 +72,37 @@
   <div class="py-5 border-bottom">
     <div class="container">
       <div class="row">
-        <div class="col-md-12"><img class="img-fluid d-block mx-auto align-items-center flex-grow-1" src="https://lelscan-vf.com/uploads/manga/tales-of-demons-and-gods/chapters/274.5/02.jpg"></div>
+        <div class="col-md-12 justify-content-center">
+          <a id="ppp">
+            <img id="page-img" style='height: 100%; width: 100%; object-fit: contain' src="{{ image_url }}">
+          </a>
+        </div>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="row">
-        <div class="col-md-4"><a class="btn btn-outline-primary pull-right" href="#">Prev Chap<br></a></div>
-        <div class="col-md-4">
-          <ul class="pagination justify-content-center">
-            <li class="page-item"> <a class="page-link" href="#">Prev</a> </li>
-            <li class="page-item"> <a class="page-link" href="#">1</a> </li>
-            <li class="page-item"> <a class="page-link" href="#">2</a> </li>
-            <li class="page-item active"> <a class="page-link" href="#">3</a> </li>
-            <li class="page-item"> <a class="page-link" href="#">4</a> </li>
-            <li class="page-item"> <a class="page-link" href="#">Next</a> </li>
-          </ul>
+        <div class="row">
+          <div class="col-md-4"><a class="btn btn-outline-primary pull-right" id="prev-chap">←Prev Chap<br></a></div>
+          <div class="col-md-4">
+            <ul class="pagination justify-content-center">
+              <li class="page-item"> <a id="prev-page" class="page-link">Prev</a> </li>
+              <li class="page-item"> <a class="page-link" href="#">1</a> </li>
+              <li class="page-item active"> <a class="page-link" href="#">...</a> </li>
+              <li class="page-item"> <a class="page-link" href="#">{{ chapter_nb_pages }}</a> </li>
+              <li class="page-item"> <a id="next-page" class="page-link" href="#">Next</a> </li>
+            </ul>
+          </div>
+          <div class="col-md-4"><a class="btn btn-outline-primary" id="next-chap">Next Chap→<br></a></div>
         </div>
-        <div class="col-md-4"><a class="btn btn-outline-primary" href="#">Next Chap<br></a></div>
-      </div>
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <pingendo onclick="window.open('https://pingendo.com/', '_blank')" style="cursor:pointer;position: fixed;bottom: 20px;right:20px;padding:4px;background-color: #00b0eb;border-radius: 8px; width:220px;display:flex;flex-direction:row;align-items:center;justify-content:center;font-size:14px;color:white">Made with Pingendo Free&nbsp;&nbsp;<img src="https://pingendo.com/site-assets/Pingendo_logo_big.png" class="d-block" alt="Pingendo logo" height="16"></pingendo>
+  <script>
+      {% include "lecture.js" %}
+  </script>
 </body>
 
 </html>

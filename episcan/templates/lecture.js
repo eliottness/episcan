@@ -1,61 +1,58 @@
 var title = document.title;
 
-var pages = {{ images_id }}
+var img_ext = ".jpg"
+var pages   = {{ images_id }}
 
 var next_chapter =  "{{ next_chap_url }}" ;
 var prev_chapter =  "{{ prev_chap_url }}" ;
 
-
-var current_page = 1;
+var nb_pages        = {{ chapter_nb_pages }};
+window.current_page = 1;
 
 var base_url = "{{ images_route }}";
 
-var initialized = false;
-
-jQuery(document).ready(function () {
-    $('.selectpicker').selectpicker();
-    if ($("div#all").is(":visible"))
-        $("div#all img").unveil(300);
-});
-
 // refresh test
-function changePage(value) {
-    document.getElementById("page-img").src = pages[value - 1];
+function changePage() {
+    document.getElementById("page-img").src = base_url + pages[window.current_page - 1] + img_ext;
 }
 
 function nextPage() {
-    // refresh test
-    nextPageVal = $('#page-list option:selected').next().val();
 
-    if (typeof nextPageVal != 'undefined') {
-        $("#page-list").val(nextPageVal);
-        $("#page-list").change();
+    if (window.current_page + 1 <= nb_pages) {
+        window.current_page += 1;
+        changePage();
     } else {
         nextChap();
     }
 }
 
 function prevPage() {
-    // refresh test
-    prevPageVal = $('#page-list option:selected').prev().val();
 
-    if (typeof prevPageVal != 'undefined') {
-        $("#page-list").val(prevPageVal);
-        $("#page-list").change();
+    if (window.current_page - 1 >= 1) {
+        window.current_page -= 1;
+        changePage();
     } else {
         prevChap();
     }
 }
 
 function nextChap(){
-    window.location = next_chapter;
+    if (next_chapter == "None") {
+         alert("Vous êtes a la dernière page du dernier chapitre");
+     } else {
+         window.location = next_chapter;
+     }
 }
 
 function prevChap(){
-    window.location = prev_chapter;
+    if (prev_chapter == "None") {
+        alert("Vous êtes a la première page du premier chapitre");
+    } else {
+        window.location = prev_chapter;
+    }
 }
 
-$('a#modePPP').click(function (e) {
+/*$('a#modePPP').click(function (e) {
     e.preventDefault();
     $('.pager-cnt .page-nav').show();
     $('div#ppp').show();
@@ -74,13 +71,23 @@ $('a#modeALL').click(function (e) {
     $("div#all img").unveil(300);
 });
 
-$('select#page-list').on('change', function () {
+$('#page-list').on('change', function () {
     changePage(this.value);
 });
+
+$('#page-list').twbsPagination({
+  totalPages: {{ chapter_nb_pages }},
+  visiblePages: 7,
+  onPageClick: function (event, page) {
+    changePage(parseInt(this.value));
+  }
+});*/
 
 $('#ppp a').on('click', nextPage);
 $('#prev-page').on('click', prevPage);
 $('#next-page').on('click', nextPage);
+$('#prev-chap').on('click', prevChap);
+$('#next-chap').on('click', nextChap);
 
 $(document).on('keyup', function (e) {
     KeyCheck(e);
