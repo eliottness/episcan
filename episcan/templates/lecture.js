@@ -83,7 +83,7 @@ $('#page-list').twbsPagination({
   }
 });*/
 
-$('#ppp a').on('click', nextPage);
+$('#ppp').on('click', nextPage);
 $('#prev-page').on('click', prevPage);
 $('#next-page').on('click', nextPage);
 $('#prev-chap').on('click', prevChap);
