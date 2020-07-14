@@ -75,7 +75,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Autres chapitres<span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 {% for num, url in chapters_url_list.items() %}
-                                    <li {%+ if num == chapter_num %} class="active" {% endif %}><a href="{{ url }}">Chapitre {{ num }}</a></li>
+                                  <li {%+ if num == chapter_num %} class="active" {% endif %}><a href="{{ url }}">Chapitre {{ num }}</a></li>
                                 {% endfor %}
                             </ul>
                         </li>

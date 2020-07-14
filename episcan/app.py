@@ -145,11 +145,11 @@ def get_mangas_list():
         ]}
 
 
-    return {"list":[
+    return {"mangas":[
         {
             "name": mg["name"],
             "image_path": url_for('images', img_file=mg["image_path"]),
-            "url":  url_for('manga_home', mg=mg["filename"])
+            "manga_url":  url_for('manga_home', mg=mg["filename"])
         } for mg in database.get_all_mangas()
     ]}
 
@@ -171,8 +171,19 @@ def get_manga_home(mg_file):
     raise NotImplementedError()
 
 def get_home_feed():
-    #TODO
-    return dict()
+
+    return {
+        "last_update": "14/07/2020",
+        "mangas":
+        [
+            {
+                "name": "Boruto",
+                "img_path": "/images/boruto.jpg",
+                "chap_num": 3.0,
+                "chap_url": url_for('reading', mg="boruto", chapter=3.0)
+            },
+        ]
+    }
 
     raise NotImplementedError()
 

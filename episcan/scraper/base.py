@@ -68,10 +68,10 @@ class Scraper:
 
         self.open(HeadlessChrome())
 
-        new_list = self.find_chapter_list() 1,2,3,4
-        old_list = self.manga.chap_num_list 1,2,3
-        recheck  = self.manga.chap_to_recheck 3
-        diff     = set(new_list) - set(old_list) 4
+        new_list = self.find_chapter_list()
+        old_list = self.manga.chap_num_list
+        recheck  = self.manga.chap_to_recheck
+        diff     = set(new_list) - set(old_list)
 
         for num in diff:
             self.download_chapter(num)

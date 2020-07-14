@@ -10,7 +10,7 @@ def chapter_init(num):
     return self
 
 def manga_init():
-    self = Manga("one-piece.mg", "One Piece", Lang.VF, Japscan("test"), "/images/boruto.jpg")
+    self = Manga("one-piece", "One Piece", Lang.VF, Japscan("test"), "/images/boruto.jpg")
 
     self.chapters = dict()
     self.chapters[0.0] = chapter_init(0.0)
@@ -31,7 +31,7 @@ def main():
     import timeit
 
     def func():
-        x = Manga.load_manga("one-piece.mg")
+        x = Manga.load_manga("one-piece")
         del x
     #print(timeit.timeit(func, number=2000) / 2000)
     #Do not run the time profiler and the memory profiler

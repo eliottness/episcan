@@ -56,15 +56,13 @@
       <div class="row">
         {% for manga in mangas %}
         <div class="col-md-4 p-3">
-          <div class="card box-shadow">
-            <a href="{{ manga.chap_url }}">
+          <a class="card box-shadow" href="{{ manga.chap_url }}">
               <img class="card-img-top" src="{{ manga.img_path }}">
               <div class="card-body">
-                <h1 style="">{{ name }}</h1>
+                <h1>{{ manga.name }}</h1>
                 <div style="">Chapitre<span class="badge badge-pill badge-primary">{{ manga.chap_num }}</span></div>
               </div>
-            </a>
-          </div>
+          </a>
         </div>
         {% endfor %}
       </div>

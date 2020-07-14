@@ -241,13 +241,13 @@ class Manga:
         try:
             chapter.prev = self.chapters[chap_list[index - 1]]
             self.chapters[chap_list[index - 1]].next = chapter
-        except IndexError:
+        except (IndexError, KeyError):
             chapter.prev = None
 
         try:
             chapter.next = self.chapters[chap_list[index]]
             self.chapters[chap_list[index]].prev = chapter
-        except IndexError:
+        except (IndexError, KeyError):
             chapter.next = None
 
         self.chapters[chapter.num] = chapter
