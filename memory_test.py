@@ -10,7 +10,7 @@ def chapter_init(num):
     return self
 
 def manga_init():
-    self = Manga("one-piece.mg", "One Piece", Lang.VF, Japscan("test"))
+    self = Manga("one-piece.mg", "One Piece", Lang.VF, Japscan("test"), "/images/boruto.jpg")
 
     self.chapters = dict()
     self.chapters[0.0] = chapter_init(0.0)

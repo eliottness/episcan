@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
-from episcan.scraper.base import Scraper, DOMElem
+from episcan.scraper.base import Scraper
+from episcan.scraper.DOMElem import DOMElem
 
 from episcan.lang import Lang
 
@@ -25,7 +26,7 @@ class Japscan(Scraper):
     """
     chapter_list_url : str
 
-    init_args    = ['chapter_list_url']
+    init_args    = ['chapter_list_url', ]
     chapter_list = DOMElem(By.ID, "chapters_list")
     next_page    = DOMElem(By.ID, "image")
 
@@ -55,3 +56,4 @@ class Japscan(Scraper):
     def download_chapter(self, num: float, overwrite=False):
         """ Download a Chapter and add it to the manga data """
         self._check_open()
+        nb_pages = self.find_the_number_of_pages()

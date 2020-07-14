@@ -18,7 +18,7 @@ class Scraper_Deamon(threading.Thread):
     def run(self):
         manga = manga.Manga.load_manga(self.manga_filename)
 
-        manga.update_manga()
+        manga.update()
         manga.save_manga()
 
         database.update_manga(manga)

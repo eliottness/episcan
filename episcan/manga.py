@@ -105,7 +105,7 @@ class Manga:
     name        : str                  #Manga name
     chapters    : dict[float, Chapter] #chap_number->Chapter object
     lang        : enum[Lang]           #The manga language
-    scraper_data: graph.Scraper        #All the data needed to download chapters
+    scraper_data: Scraper        #All the data needed to download chapters
 
     @staticmethod
     def iter_all_mangas(logger):

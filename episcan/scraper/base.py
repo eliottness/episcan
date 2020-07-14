@@ -2,18 +2,8 @@ from __future__ import annotations
 import os
 import json
 
-from selenium.webdriver.common.by import By
-
-class DOMElem:
-
-    by        : By  # Search method to find the particular element
-    value     : str # Search value
-    send_keys : str # Keys to enter if the value is a field
-
-    def __init__(self, by, val, keys=None):
-        self.by         = by
-        self.value      = val
-        self.send_keys  = keys
+from episcan.scraper.DOMElem import DOMElem
+from episcan.scraper.headless import HeadlessChrome
 
 class Scraper:
     """
@@ -54,6 +44,7 @@ class Scraper:
             raise ValueError("Chrome Driver is not open, please use HeadlessChrome in a 'with' clause")
 
     def close(self):
+        self.driver.close()
         del self.driver
 
     def find_chapter_lang(self, num: float = None): #-> enum[Lang]
@@ -74,10 +65,13 @@ class Scraper:
 
     def update_manga(self):
         """ Update the manga with all the chapters"""
-        new_list = self.find_chapter_list()
-        old_list = self.manga.chap_num_list
-        recheck  = self.manga.chap_to_recheck
-        diff     = set(new_list) - set(old_list)
+
+        self.open(HeadlessChrome())
+
+        new_list = self.find_chapter_list() 1,2,3,4
+        old_list = self.manga.chap_num_list 1,2,3
+        recheck  = self.manga.chap_to_recheck 3
+        diff     = set(new_list) - set(old_list) 4
 
         for num in diff:
             self.download_chapter(num)
@@ -87,3 +81,5 @@ class Scraper:
             new_lang = self.find_chapter_lang(num)
             if old_lang != new_lang:
                 self.download_chapter(num, overwrite=True)
+
+        self.close()

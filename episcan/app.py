@@ -223,8 +223,11 @@ def images(img_file):
     import os
     return send_from_directory(os.path.join('..', config["images_path"]), img_file, mimetype="image/jpg")
 
+"https://tpe.bouhana.com/update?manga=boruto"
+
 @app.route('/update', methods=['POST'])
-def update(mg):
+def update():
+
     if "manga" not in request.args:
         abort(404)
 
