@@ -9,7 +9,7 @@ from episcan.lang import Lang
 
 class Japscan(Scraper):
 
-    base_url = "https://www.japscan.co/"
+    base_url = "https://www.japscan.co/lecture-en-ligne/"
 
     ###########################
     ### Key elements
@@ -29,7 +29,6 @@ class Japscan(Scraper):
     init_args    = ['chapter_list_url', ]
     chapter_list = DOMElem(By.ID, "chapters_list")
     next_page    = DOMElem(By.ID, "image")
-    chapter_lang = DOMElem(By.CLASS_NAME, "badge badge-primary")
 
     #this must also possess an href attribute and be clickable
     chapter_list_elem = DOMElem(By.CLASS_NAME, "text-dark")
@@ -42,25 +41,49 @@ class Japscan(Scraper):
         return [self.__class__.__name__, self.chapter_list_url]
 
     def find_chapter_lang(self, num: float = None): #-> enum[mg.Lang]
-        """ find the language of the chapter (VF, VUS, RAW...) """
+        """
+        find the language of the chapter (VF, VUS, RAW...)
+        """
+
+        lang = None
         self._check_open()
         self.driver.get(self.chapter_list_url)
 
         try:
-            elem = self.driver.find_element_by_class_name(chapter_lang.value)
-            self.manga.lang = lang.get_lang()
-        except NoSuchElementException:
-            self.manga.lang = lang.get_lang(3)
+            if num % 1 == 0:
+                num = int(num)
 
+            elem = self.driver.find_element_by_partial_link_text(num)
 
-    def find_the_number_of_pages(self): #-> int
+            if elem.text.contain("Raw"):
+                lang = lang.get_lang(1)
+
+            else if :
+                """ !!! Locate the Vus Badge in the HTML """
+                lang = lang.get_lang(2)
+
+            else:
+                lang = lang.get_lang(3)
+
+        except:
+            lang = lang.get_lang(0)
+
+        return lang
+
+    def find_the_number_of_pages(self, num): #-> int
         """ find the number of page of this chapter """
         self._check_open()
+        link = "{}{}/{}/".format(base_url, self.manga.name, num)
+        self.driver.get(link)
+
+        elem = self.driver.find_element_by_xpath("/html/body/div[3]/div[1]/div[2]/div/p[5]/span")
+        return int(elem.text[:2])
 
     def find_chapters_list(self): #-> list[float]
         """ Find the list of chapter numbers """
         self._check_open()
         self.driver.get(self.chapter_list_url)
+        
 
     def download_chapter(self, num: float, overwrite=False):
         """ Download a Chapter and add it to the manga data """
