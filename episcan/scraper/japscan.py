@@ -1,3 +1,5 @@
+import os
+
 from __future__ import annotations
 
 from bs4 import BeautifulSoup
@@ -53,7 +55,7 @@ class Japscan(Scraper):
             if num % 1 == 0:
                 num = int(num)
 
-            elem = self.driver.find_element_by_partial_link_text(num)
+            elem = self.driver.find_element_by_partial_link_text("{} VF".format(num))
 
             if elem.text.contain("Raw"):
                 lang = lang.get_lang(1)
@@ -68,24 +70,79 @@ class Japscan(Scraper):
         except:
             lang = lang.get_lang(0)
 
+        self.driver.close()
         return lang
 
     def find_the_number_of_pages(self, num): #-> int
-        """ find the number of page of this chapter """
+        """
+        find the number of page of this chapter
+        """
+
         self._check_open()
         link = "{}{}/{}/".format(base_url, self.manga.name, num)
         self.driver.get(link)
 
         elem = self.driver.find_element_by_xpath("/html/body/div[3]/div[1]/div[2]/div/p[5]/span")
-        return int(elem.text[:2])
+        nb_pages = int(elem.text[:2])
+        """ Might return the 'Number of page:' string instead of the one with the correct number of pages """
+
+        self.driver.close()
+        return nb_pages
 
     def find_chapters_list(self): #-> list[float]
-        """ Find the list of chapter numbers """
+        """
+        Find the list of chapter numbers
+        """
+
         self._check_open()
         self.driver.get(self.chapter_list_url)
-        
+
+        chp_list = []
+        elems = self.driver.find_elements_by_partial_link_text("VF")
+
+        for elem in elems:
+
+            i  = 0
+            nb = ""
+            while i < len(elem):
+
+                while (elem[i] >= '1' and elem[i] <= '9') or elem[i] == '.':
+                    nb += elem[i]
+                    i += 1
+
+                i += 1
+
+            ch_list.append(float(nb))
+
+        self.driver.close()
+        return chp_list.sort()
 
     def download_chapter(self, num: float, overwrite=False):
-        """ Download a Chapter and add it to the manga data """
+        """
+        Download a Chapter and add it to the manga data
+        """
+
         self._check_open()
-        nb_pages = self.find_the_number_of_pages()
+        nb_pages = self.find_the_number_of_pages(num)
+        chapter  = Chapter(None, None, num, find_chapter_lang(num), [])
+
+        j = 0
+        for i in nb_pages:
+
+            try:
+                link = "{}{}{}.html".format(base_url, self.manga.name, i)
+                self.driver.get(link)
+
+            except:
+                break
+
+            images = self.driver.find_elements_by_tag_name('img')
+
+            for image in images:
+
+                image.screenshot("./../../images", "tmp{}.jpg".format(j))
+                chapter.add_page("tmp{}.jpg".format(j), j + 1)
+                j += 1
+
+        self.manga.add_chapter(chapter, overwrite=True)
+        self.driver.close()
