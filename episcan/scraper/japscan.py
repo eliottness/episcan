@@ -1,7 +1,6 @@
-import os
-
 from __future__ import annotations
 
+import os
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from episcan.scraper.base import Scraper
@@ -60,7 +59,7 @@ class Japscan(Scraper):
             if elem.text.contain("Raw"):
                 lang = lang.get_lang(1)
 
-            else if :
+            elif elem.text.contains("VUS"):
                 """ !!! Locate the Vus Badge in the HTML """
                 lang = lang.get_lang(2)
 

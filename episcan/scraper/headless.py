@@ -1,4 +1,3 @@
-import pandas as pd
 import os
 import time
 
@@ -99,6 +98,7 @@ class HeadlessChrome:
         if not isinstance(elem, WebElement):
             raise TypeError("The argument 'elem' must be either a DOMElem or a WebElement")
 
+        import pandas as pd
         dfs  = pd.read_html(elem.get_attribute('outerHTML'))
 
         return dfs[0]

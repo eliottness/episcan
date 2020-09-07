@@ -37,7 +37,6 @@ class Database:
                 cr.close()
                 conn.rollback()
                 self.logger.warning("Rollback on database {}".format(self.db_file))
-                time.sleep(1)
                 continue
             except sqlite3.DatabaseError as e:
                 self.logger.error(f"Database ERROR: {repr(e)}")

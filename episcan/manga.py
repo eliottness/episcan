@@ -154,6 +154,13 @@ class Manga:
         return [self.name, self.lang, self.scraper_data.to_dict(), chapters, self.image_path]
 
     def __init__(self, filename, name, lang, scraper_data, img_path):
+        """
+        :filename: simplified name without space and any unicode (without extention)
+        :name: full name displayed on web
+        :lang: Lang.VF | Lang.VUS | Lang.RAW
+        :scraper_data: a Scraper instance of a specific site
+        :img_path: path to the thumbnail
+        """
 
         self.image_path = img_path
         self.filename = filename
