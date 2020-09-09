@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
-  <link rel="stylesheet" href="C:/Users/eliott/Desktop/Pingendo/New Site/wireframe.css">
+  <link rel="stylesheet" href="/static/css/wireframe.css">
 </head>
 
 <body class="">
@@ -17,7 +17,7 @@
           <div class="row">
             <div class="col-md-6"><img class="img-fluid d-block" src="{{ image_path }}"></div>
             <div class="col-md-6">
-              <h1 class="">Heading 1</h1>
+              <h1 class="">{{ manga_name }}</h1>
               <p class="lead">Nombre de chapitres: {{ nb_chap }}<br></p>
               <p class="lead">Dernière mise à jour: {{ last_update }}</p>
               <p class="lead">Ajouté le: {{ added_date }}</p>
@@ -33,7 +33,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="list-group">
-            {% for num, url in chapters %}
+            {% for num, url in chapters.items() %}
             <a href="{{ url }}" class="list-group-item list-group-item-action active"> Chapitre {{ num }}</a>
             {% endfor %}
           </div>

@@ -7,13 +7,13 @@ from episcan.manga import Manga
 __doc__ = r'''
 
 CREATE TABLE "manga_list" (
-	"filename"	TEXT NOT NULL,
-	"name"	TEXT NOT NULL,
-	"nb_chap"	INTEGER NOT NULL,
-	"last_update"	TEXT NOT NULL,
-	"added_date"	TEXT NOT NULL,
-	"image_path"	TEXT,
-	PRIMARY KEY("filename")
+    "filename"    TEXT NOT NULL,
+    "name"    TEXT NOT NULL,
+    "nb_chap"    INTEGER NOT NULL,
+    "last_update"    TEXT NOT NULL,
+    "added_date"    TEXT NOT NULL,
+    "image_path"    TEXT,
+    PRIMARY KEY("filename")
 )
 
 '''
@@ -66,6 +66,20 @@ class Database:
             "added_date": line[4],
             "image_path": line[5] #thumbnail
         } for line in lines]
+
+
+    def get_manga(self, manga_filename):
+        """
+        Give the whole db line about a manga
+        """
+
+        mangas = self.get_all_mangas()
+        mangas = [manga for manga in mangas if manga['filename'] == manga_filename]
+
+        if len(mangas) == 0:
+            app.logger.error("get_manga: Cannot find manga {manga_filename} in DB")
+
+        return mangas[0]
 
     def get_mangas_list(self):
         """

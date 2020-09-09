@@ -166,9 +166,17 @@ def get_manga_home(mg_file):
             "chapters_list": []
         }
 
-    return {}
+    db_infos = database.get_manga(mg_file)
+    manga    = find_manga(mg_file)
 
-    raise NotImplementedError()
+    return {
+        "image_path": url_for('images', img_file=db_infos["image_path"]),
+        "manga_name": db_infos["name"],
+        "last_update": db_infos["last_update"],
+        "added_date": db_infos["added_date"],
+        "lang": manga.lang,
+        "chapters": {num: url_for('reading', mg=manga.filename, chapter=num) for num in sorted(manga.chapters)}
+    }
 
 def get_home_feed():
 
@@ -234,8 +242,7 @@ def images(img_file):
     import os
     return send_from_directory(os.path.join('..', config["images_path"]), img_file, mimetype="image/jpg")
 
-"https://tpe.bouhana.com/update?manga=boruto"
-
+#"https://tpe.bouhana.com/update?manga=boruto"
 @app.route('/update', methods=['POST'])
 def update():
 
